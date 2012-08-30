@@ -1,0 +1,13 @@
+table {
+  border: 1px solid black;
+}
+table thead th {
+  background-color: #DFF;
+  cursor: pointer;
+}
+table tbody td {
+  background-color: #FDF;
+}
+table tfoot td {
+  background-color: #FFD;
+}
