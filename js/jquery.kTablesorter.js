@@ -1,21 +1,53 @@
 (function ($) {
 
 	var dataName = "kSorter";
+	var columnIndexName = "kSorterColumnIndex";
 
 	// Default settings for kTablesorter
 	var defaults = {
 		debug: true
 	};
 
-	function mySorter(column) {
+	function mySorter(column, order) {
 		return function (a, b) {
-			return a[column] - b[column];
+			if (order === "asc") {
+				return a[column] - b[column];
+			}
+			return a[column] + b[column];
 		};
 	}
 
-	function myClick(dataCache) {
-		return function () {
-			console.log("Yo");
+	function bindHeaders(headers) {
+		for (var i = 0; i < headers.length; i++) {
+			var header = headers[i];
+			$(header).unbind('click').click(function() {
+				
+				// Get table (should be optimized)
+				var table = $(this).parent().parent().parent();
+
+				// Get data
+				var data = $(table).data(dataName);
+
+				// Get sorting
+				var sorting = data.sorting;
+
+				// Get header index
+				var headerIndex = $(this).data(columnIndexName);
+
+				// Update sorting and save it
+				if (sorting.column === headerIndex) {
+					sorting.order = (sorting.order === "asc" ? "desc" : "asc");
+				} else {
+					sorting.column = headerIndex;
+				}
+				$(table).data(dataName, data);
+
+				// Resort data
+				methods.sort.apply(table);
+
+				// Rewrite table
+				methods.updateTable.apply(table);
+			});
 		};
 	}
 
@@ -77,7 +109,9 @@
 					console.log(data.dataCache);
 				}
 
-				// TODO : Create bindings for headers
+				// Create bindings for headers
+				var headers = $(this).find('thead th');
+				bindHeaders(headers);
 
 				// Rerender the table for the user
 				methods.updateTable.apply(this);
@@ -93,6 +127,8 @@
 
 				var i;
 
+				// TODO : Unbind everything on headers (if some is removed)
+
 				// Save headers in seperate cache
 				for (i = 0; i < headersLength; i++) {
 					var header = headers[i];
@@ -100,12 +136,16 @@
 					// Determine column type 
 					var type = 'text';
 
-					// Create bindings for header 
-					// createBindings(table, header);
+					// Save header
 					data.headerCache[i] = {
 						'header': $(header).text(),
 						'type': type
 					};
+
+					// Save column index to data on column
+					$(header).data(columnIndexName, i);
+
+
 				}
 				$(this).data(dataName, data);
 			});
@@ -142,12 +182,12 @@
 		sort: function () {
 			return $(this).each(function () {
 				var data = $(this).data(dataName);
-				data.dataCache.sort(mySorter(data.sorting.column));
+				data.dataCache.sort(mySorter(data.sorting.column, data.sorting.order));
 				$(this).data(dataName, data);
 			});
 		},
 		destroy: function () {
-			// GOOD
+			// TODO
 		},
 		updateTable: function () {
 			return $(this).each(function () {
