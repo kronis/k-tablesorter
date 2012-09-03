@@ -8,8 +8,15 @@
   	<script src="script.js"></script>
 	</head>
 	<body>
-		<h1>k-Tablesorter Demo</h1>
-		<table>
+		<h1>k-Tablesorter</h1>
+
+
+		<h2>Basic table demo</h2>
+
+		<h2>Multiple basic tables demo</h2>
+
+		<h2>Sorting and filter table demo</h2>
+		<table id="demo3">
 			<thead>
 				<tr>
 					<th>Id</th>
@@ -42,23 +49,37 @@
 				</tr>
 			</tfoot>
 		</table>
+		<div class="code">
+			var demo3Filter = function(row) {
+				if (row[2] < 22) {
+					return false;
+				}
+				return true;
+			};
+		</div>
+		<div class="parameters">
+			row[index]
+			row.rowElement
+		</div>	
 
-		<table>
+
+		<h2>Sorting and changing filter live demo</h2>
+		<table id="demo4">
 			<thead>
 				<tr>
-					<th>Id 2</th>
-					<th>Name 2</th>
-					<th>Age 2</th>
+					<th>Id</th>
+					<th>Name</th>
+					<th>Age</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td>0</td>
+					<td>4</td>
 					<td>John</td>
 					<td>24</td>
 				</tr>
 				<tr>
-					<td>1</td>
+					<td>5</td>
 					<td>Adam</td>
 					<td>23</td>
 				</tr>
@@ -76,5 +97,7 @@
 				</tr>
 			</tfoot>
 		</table>
+		<button id="filterId">id > 3</button>
+		<button id="filterAge">age < 22</button>	
 	</body>
 </html>

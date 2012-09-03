@@ -15,10 +15,11 @@
 		sorters.push(sorter);
 	}
 
-	function mySorter(column, order, sorter) {
+	function customSorter(column, order, sorter) {
 		return function (a, b) {
 			var result = sorter(a[column], b[column]);
 
+			// Check order, else 'reverse'
 			if (order === "asc") {
 				return sorter(a[column], b[column]);
 			}
@@ -49,6 +50,11 @@
 				} else {
 					sortingSettings.column = headerIndex;
 				}
+
+				// TODO : Update styles for headers
+				var a = 1;
+
+				// Save new stuff
 				$(table).data(dataName, data);
 
 				// Resort data
@@ -61,11 +67,21 @@
 	}
 
 	function rewriteTable(table, dataCache) {
+
+		var data = $(table).data(dataName);
+		var options = data.options;
+		var filter = options.filter;
+
+		// Hide everything, to improve performance
+		$(table).find("tbody").addClass("hidden");
 		for (var i = 0; i < dataCache.length; i++) {
 			var row = dataCache[i];
 			$(row.rowElement[0]).detach();
-			$(table).find("tbody").append(row.rowElement[0]);
+			if (filter === undefined || filter(row)) {
+				$(table).find("tbody").append(row.rowElement[0]);
+			}
 		}
+		$(table).find("tbody").removeClass("hidden");
 	}
 
 	function initStandardSorters() {
@@ -140,20 +156,23 @@
 	function getDataForColumn(table, headerIndex) {
 		var data = $(table).data(dataName);
 		var dataCache = data.dataCache;
+		var options = data.options;
 		var returnData = [];
 
 		for (var i = 0; i < dataCache.length; i++) {
 			var row = dataCache[i];
 			returnData.push(row[headerIndex]);
 
-			// TODO : implement a breake for for loop, use settings.rowsToDetermineSorter
+			if (i === options.rowsToDetermineSorter - 1) {
+				break;
+			}
 		}
 		return returnData;
 	}
 
 	var methods = {
 		init: function (options) {
-			return this.each(function (options) {
+			return this.each(function () {
 
 				var data = {
 					'options': '',
@@ -209,6 +228,14 @@
 				methods.updateTable.apply(this);
 			});
 		},
+		updateFilter: function (filter) {
+			return $(this).each(function () {
+				var data = $(this).data(dataName);
+				var options = data.options;
+				options.filter = filter;
+				$(this).data(dataName, data);
+			});
+		},
 		updateHeaders: function () {
 
 			return $(this).each(function () {
@@ -222,12 +249,17 @@
 				// TODO : Unbind everything on headers (if some is removed)
 				var a = "TODO";
 
+				// TODO : Bind headers
+				var b = "TODO";
+
 				// Save headers in seperate cache
 				for (i = 0; i < headersLength; i++) {
 					var header = headers[i];
 
 					// Get data for a column
 					var columnData = getDataForColumn($(this), i);
+
+					console.log(columnData);
 
 					// Determine column type and selecting sorter
 					var sorter = getSorterForData(columnData);
@@ -287,7 +319,7 @@
 					}
 				}
 
-				data.dataCache.sort(mySorter(sortingSettings.column, sortingSettings.order, sorter.sorter));
+				data.dataCache.sort(customSorter(sortingSettings.column, sortingSettings.order, sorter.sorter));
 				$(this).data(dataName, data);
 			});
 		},
