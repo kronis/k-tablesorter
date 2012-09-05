@@ -1,103 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>The HTML5 Herald</title>
+		<title>kTablesorter - A jQuery tablesorter for You</title>
 		<link rel="stylesheet" href="styles.css" type="text/css" />
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 		<script src="js/jquery.kTablesorter.js"></script>
   	<script src="script.js"></script>
 	</head>
 	<body>
-		<h1>k-Tablesorter</h1>
+		<h1>kTablesorter</h1>
 
+		<h2>Demos</h2>
+		<h3>Basic table demo</h3>
+		<a href="demo1.html">Demo 1</a>
 
-		<h2>Basic table demo</h2>
+		<h3>Multiple basic tables demo</h3>
+		<a href="demo2.html">Demo 2</a> TODO
 
-		<h2>Multiple basic tables demo</h2>
+		<h3>Sorting and filter table demo</h3>
+		<a href="demo3.html">Demo 3</a>
 
-		<h2>Sorting and filter table demo</h2>
-		<table id="demo3">
+		<h3>Sorting and changing filter live demo</h3>
+		<a href="demo4.html">Demo 4</a>	
+
+		<h3>Demo of 'beforeSort' and 'afterSort' callbacks</h3>
+		<a href="demo5.html">Demo 5</a> TODO
+
+		<h3>Demo of disabling sort on columns</h3>
+		<a href="demo6.html">Demo 6</a>
+
+		<h3>Do not sort table on initilize</h3>
+		<a href="demo7.html">Demo 7</a>
+
+		<h3>Benchmarking</h3>
+		<a href="demo8.html">Demo 8</a> TODO
+
+		<h3>Large table with many rows</h3>
+		<a href="demo9.html">Demo 9</a> TODO
+
+		<h2>Options</h2>
+		<table>
 			<thead>
 				<tr>
-					<th>Id</th>
-					<th>Name</th>
-					<th>Age</th>
+					<th>Option</th>
+					<th>Values</th>
+					<th>Default</th>
+					<th>Type</th>
+					<th>Desciption</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td>4</td>
-					<td>John</td>
-					<td>24</td>
+					<td>rowsToDetermineSorter</td>
+					<td>=> 0</td>
+					<td>=> 0</td>
+					<td>integer</td>
+					<td>Determine column types. 0 for all</td>
 				</tr>
 				<tr>
-					<td>5</td>
-					<td>Adam</td>
-					<td>23</td>
+					<td>debug</td>
+					<td>true or false</td>
+					<td>false</td>
+					<td>boolean</td>
+					<td>Show debug stuff</td>
 				</tr>
 				<tr>
-					<td>2</td>
-					<td>Frosty</td>
-					<td>20</td>
+					<td>beforeSort</td>
+					<td></td>
+					<td>undefined</td>
+					<td>function</td>
+					<td>Function will be runned before sorting</td>
+				</tr>
+				<tr>
+					<td>afterSort</td>
+					<td></td>
+					<td>undefined</td>
+					<td>function</td>
+					<td>Function will be runned after sorting</td>
+				</tr>
+				<tr>
+					<td>disabledColumns</td>
+					<td>column indexes, 0 is first</td>
+					<td>[]</td>
+					<td>array</td>
+					<td>Disable sorting on following columns</td>
+				</tr>
+				<tr>
+					<td>sortOnInit</td>
+					<td>true or false</td>
+					<td>true</td>
+					<td>boolean</td>
+					<td>If table sould be sorted on initilize</td>
 				</tr>
 			</tbody>
-			<tfoot>
-				<tr>
-					<td>3</td>
-					<td>-</td>
-					<td>-</td>
-				</tr>
-			</tfoot>
 		</table>
-		<div class="code">
-			var demo3Filter = function(row) {
-				if (row[2] < 22) {
-					return false;
-				}
-				return true;
-			};
-		</div>
-		<div class="parameters">
-			row[index]
-			row.rowElement
-		</div>	
 
-
-		<h2>Sorting and changing filter live demo</h2>
-		<table id="demo4">
+		<h2>Methods</h2>
+		<table>
 			<thead>
 				<tr>
-					<th>Id</th>
-					<th>Name</th>
-					<th>Age</th>
+					<th>Method</th>
+					<th>Parameters</th>
+					<th>Retun value</th>
+					<th>Desciption</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td>4</td>
-					<td>John</td>
-					<td>24</td>
+					<td>init</td>
+					<td></td>
+					<td></td>
+					<td></td>
 				</tr>
 				<tr>
-					<td>5</td>
-					<td>Adam</td>
-					<td>23</td>
+					<td>updateFilter</td>
+					<td></td>
+					<td></td>
+					<td></td>
 				</tr>
 				<tr>
-					<td>2</td>
-					<td>Frosty</td>
-					<td>20</td>
+					<td>updateHeaders</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>updateData</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>sort</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>destroy</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>updateTable</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>addSorter</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>updateDisabledColumns</td>
+					<td></td>
+					<td></td>
+					<td></td>
 				</tr>
 			</tbody>
-			<tfoot>
-				<tr>
-					<td>3</td>
-					<td>-</td>
-					<td>-</td>
-				</tr>
-			</tfoot>
 		</table>
-		<button id="filterId">id > 3</button>
-		<button id="filterAge">age < 22</button>	
+
+		<h2>Data object on table</h2>
+		<ul>
+
+		</ul>
+
+		<h2>Downloads</h2>
+		Full
+		Minimized
+
+		<h2>Git</h2>
+		<a href="https://github.com/kronis/k-tablesorter">Here</a>
+
 	</body>
 </html>

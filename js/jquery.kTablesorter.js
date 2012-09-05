@@ -8,7 +8,11 @@
 	// Default settings for kTablesorter
 	var defaults = {
 		debug: false,
-		rowsToDetermineSorter: 1
+		rowsToDetermineSorter: 1,
+		beforeSort: undefined,
+		afterSort: undefined,
+		disabledColumns: [],
+		sortOnInit: true
 	};
 
 	function addSorter(sorter) {
@@ -41,8 +45,18 @@
 				// Get sorting
 				var sortingSettings = data.sortingSettings;
 
+				// Get disabeld columns
+				var disabledColumns = data.options.disabledColumns;
+
 				// Get header index
 				var headerIndex = $(this).data(columnIndexName);
+
+				// Do a check against disabledColumns
+				for (var i = 0; i < disabledColumns.length; i++) {
+					if (headerIndex === disabledColumns[i]) {
+						return;
+					}
+				}
 
 				// Update sorting and save it
 				if (sortingSettings.column === headerIndex) {
@@ -61,7 +75,7 @@
 				methods.sort.apply(table);
 
 				// Rewrite table
-				methods.updateTable.apply(table);
+				// methods.updateTable.apply(table);
 			});
 		};
 	}
@@ -213,19 +227,23 @@
 					console.log(data.headerCache);
 				}
 
-				// Sort everyting 
-				methods.sort.apply(this);
-				if (data.options.debug) {
-					console.log("DataCache after sorting:");
-					console.log(data.dataCache);
-				}
-
 				// Create bindings for headers
 				var headers = $(this).find('thead th');
 				bindHeaders(headers);
 
+				// Sort everyting 
+				if (data.options.sortOnInit) {
+					methods.sort.apply(this);
+					if (data.options.debug) {
+						console.log("DataCache after sorting:");
+						console.log(data.dataCache);
+					}
+				}
+
 				// Rerender the table for the user
-				methods.updateTable.apply(this);
+				// if (data.options.sortOnInit) {
+				// 	methods.updateTable.apply(this);
+				// }
 			});
 		},
 		updateFilter: function (filter) {
@@ -258,8 +276,6 @@
 
 					// Get data for a column
 					var columnData = getDataForColumn($(this), i);
-
-					console.log(columnData);
 
 					// Determine column type and selecting sorter
 					var sorter = getSorterForData(columnData);
@@ -308,6 +324,12 @@
 		sort: function () {
 			return $(this).each(function () {
 				var data = $(this).data(dataName);
+				var beforeSort = data.options.beforeSort;
+				var afterSort = data.options.afterSort;
+				// TODO : Check so it a function
+				if (beforeSort) {
+					beforeSort($(this));
+				}
 				var sortingSettings = data.sortingSettings;
 				var headerCache = data.headerCache;
 				var sorterName = headerCache[sortingSettings.column].sorter;
@@ -321,15 +343,20 @@
 
 				data.dataCache.sort(customSorter(sortingSettings.column, sortingSettings.order, sorter.sorter));
 				$(this).data(dataName, data);
+
+				var data = $(this).data(dataName);
+				rewriteTable($(this), data.dataCache);
+				if (afterSort) {
+					afterSort($(this));
+				}
 			});
 		},
 		destroy: function () {
 			// TODO
 		},
-		updateTable: function () {
+		updateDisabledColumns: function (disabledColumns) {
 			return $(this).each(function () {
-				var data = $(this).data(dataName);
-				rewriteTable($(this), data.dataCache);
+				// TODO
 			});
 		},
 		addSorter: function (sorter) {
