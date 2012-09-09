@@ -8,7 +8,7 @@
 	// Default settings for kTablesorter
 	var defaults = {
 		debug: false,
-		rowsToDetermineSorter: 1,
+		rowsToDetermineSorter: 1, // TODO : -1
 		beforeSort: undefined,
 		afterSort: undefined,
 		disabledColumns: [],
@@ -71,11 +71,12 @@
 				// Save new stuff
 				$(table).data(dataName, data);
 
-				// Resort data
-				methods.sort.apply(table);
-
-				// Rewrite table
-				// methods.updateTable.apply(table);
+				// TODO : timeout should be moved into sort
+				$(table).find("tbody").addClass("hidden");
+				setTimeout(function() {
+					// Resort data
+					methods.sort.apply(table);
+				}, 100);
 			});
 		};
 	}
@@ -207,7 +208,7 @@
 				// Sorting settings for table
 				data.sortingSettings = {
 					'column': 0,
-					'order': 'asc',
+					'order': 'asc'
 				};
 
 				// Save everything on element
@@ -239,11 +240,6 @@
 						console.log(data.dataCache);
 					}
 				}
-
-				// Rerender the table for the user
-				// if (data.options.sortOnInit) {
-				// 	methods.updateTable.apply(this);
-				// }
 			});
 		},
 		updateFilter: function (filter) {

@@ -11,3 +11,6 @@ table tbody td {
 table tfoot td {
   background-color: #FFD;
 }
+.hidden {
+  display: none;
+}
