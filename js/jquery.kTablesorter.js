@@ -8,11 +8,13 @@
 	// Default settings for kTablesorter
 	var defaults = {
 		debug: false,
-		rowsToDetermineSorter: 1, // TODO : -1
+		rowsToDetermineSorter: 1,
+		// TODO : -1
 		beforeSort: undefined,
 		afterSort: undefined,
 		disabledColumns: [],
-		sortOnInit: true
+		sortOnInit: true,
+		sorters: undefined
 	};
 
 	function addSorter(sorter) {
@@ -31,54 +33,60 @@
 		};
 	}
 
-	function bindHeaders(headers) {
-		for (var i = 0; i < headers.length; i++) {
-			var header = headers[i];
-			$(header).unbind('click').click(function () {
+	function onClickFunction() {
+		return function () {
+			// Get table (should be optimized)
+			var table = $(this).parent().parent().parent();
 
-				// Get table (should be optimized)
-				var table = $(this).parent().parent().parent();
+			// Get data
+			var data = $(table).data(dataName);
 
-				// Get data
-				var data = $(table).data(dataName);
+			// Get sorting
+			var sortingSettings = data.sortingSettings;
 
-				// Get sorting
-				var sortingSettings = data.sortingSettings;
+			// Get disabeld columns
+			var disabledColumns = data.options.disabledColumns;
 
-				// Get disabeld columns
-				var disabledColumns = data.options.disabledColumns;
+			// Get header index
+			var headerIndex = $(this).data(columnIndexName);
 
-				// Get header index
-				var headerIndex = $(this).data(columnIndexName);
-
-				// Do a check against disabledColumns
-				for (var i = 0; i < disabledColumns.length; i++) {
-					if (headerIndex === disabledColumns[i]) {
-						return;
-					}
+			// Do a check against disabledColumns
+			var j;
+			for (j = 0; j < disabledColumns.length; j++) {
+				if (headerIndex === disabledColumns[j]) {
+					return;
 				}
+			}
 
-				// Update sorting and save it
-				if (sortingSettings.column === headerIndex) {
-					sortingSettings.order = (sortingSettings.order === "asc" ? "desc" : "asc");
-				} else {
-					sortingSettings.column = headerIndex;
-				}
+			// Update sorting and save it
+			if (sortingSettings.column === headerIndex) {
+				sortingSettings.order = (sortingSettings.order === "asc" ? "desc" : "asc");
+			} else {
+				sortingSettings.column = headerIndex;
+			}
 
-				// TODO : Update styles for headers
-				var a = 1;
+			// TODO : Update styles for headers
+			var a = 1;
 
-				// Save new stuff
-				$(table).data(dataName, data);
+			// Save new stuff
+			$(table).data(dataName, data);
 
-				// TODO : timeout should be moved into sort
-				$(table).find("tbody").addClass("hidden");
-				setTimeout(function() {
-					// Resort data
-					methods.sort.apply(table);
-				}, 100);
-			});
+			// TODO : timeout should be moved into sort
+			$(table).find("tbody").addClass("hidden");
+			setTimeout(function () {
+				// Resort data
+				methods.sort.apply(table);
+			}, 100);
 		};
+	}
+
+	function bindHeaders(headers) {
+		var i;
+
+		// Bind headers
+		for (i = 0; i < headers.length; i++) {
+			$(headers[i]).unbind('click').click(onClickFunction());
+		}
 	}
 
 	function rewriteTable(table, dataCache) {
@@ -89,7 +97,8 @@
 
 		// Hide everything, to improve performance
 		$(table).find("tbody").addClass("hidden");
-		for (var i = 0; i < dataCache.length; i++) {
+		var i;
+		for (i = 0; i < dataCache.length; i++) {
 			var row = dataCache[i];
 			$(row.rowElement[0]).detach();
 			if (filter === undefined || filter(row)) {
@@ -136,7 +145,8 @@
 		// Add first type to teporary array
 		uniqueValues.push(types[0]);
 
-		for (var i = 1; i < types.length; i++) {
+		var i;
+		for (i = 1; i < types.length; i++) {
 			var type = types[i];
 
 			// If type exists in temporary array, continue
@@ -152,11 +162,11 @@
 
 	function getSorterForData(columnData) {
 		var results = [];
-
-		for (var i = 0; i < columnData.length; i++) {
+		var i, j;
+		for (i = 0; i < columnData.length; i++) {
 			var data = columnData[i];
 
-			for (var j = 1; j < sorters.length; j++) {
+			for (j = 1; j < sorters.length; j++) {
 				var sorter = sorters[j];
 				if (sorter.test(data)) {
 					results.push(sorter.name);
@@ -173,8 +183,8 @@
 		var dataCache = data.dataCache;
 		var options = data.options;
 		var returnData = [];
-
-		for (var i = 0; i < dataCache.length; i++) {
+		var i;
+		for (i = 0; i < dataCache.length; i++) {
 			var row = dataCache[i];
 			returnData.push(row[headerIndex]);
 
@@ -183,6 +193,28 @@
 			}
 		}
 		return returnData;
+	}
+
+	function validSorter(sorterInput) {
+
+		// Check so it's not undefined or empty
+		if (!sorterInput || sorterInput === '') {
+			return false;
+		}
+
+		// Loop all sorters and check against names.
+		var i;
+		for (i = 0; i < sorters.length; i++) {
+			var sorter = sorters[i];
+
+			// Found
+			if (sorterInput === sorter.name) {
+				return true;
+			}
+		}
+
+		// Not found 
+		return false;
 	}
 
 	var methods = {
@@ -257,8 +289,7 @@
 				var headers = $(this).find('thead th');
 				var body = $(this).find('tbody td');
 				var headersLength = headers.length;
-
-				var i;
+				var sortersFromOptions = data.options.sorters;
 
 				// TODO : Unbind everything on headers (if some is removed)
 				var a = "TODO";
@@ -267,14 +298,43 @@
 				var b = "TODO";
 
 				// Save headers in seperate cache
+				var i;
 				for (i = 0; i < headersLength; i++) {
 					var header = headers[i];
+					var sorter;
 
-					// Get data for a column
-					var columnData = getDataForColumn($(this), i);
+					// Dont select sorter for columns that are disabled
+					if (data.options.disabledColumns.indexOf(i) >= 0) {
+						if (data.options.debug) {
+							console.log("Sorting disabled for column " + i);
+						}
+						data.headerCache[i] = {
+							'header': $(header).text(),
+							'sorter': undefined
+						};
+						$(header).data(columnIndexName, i);
+						continue;
+					}
 
-					// Determine column type and selecting sorter
-					var sorter = getSorterForData(columnData);
+					// If user have specified sorters and valid ones, use them
+					if (sortersFromOptions && validSorter(sortersFromOptions[i])) {
+						sorter = sortersFromOptions[i];
+					} else {
+
+						if (data.options.debug) {
+							console.log("Searching for sorter for column " + i);
+						}
+
+						// Get data for a column
+						var columnData = getDataForColumn($(this), i);
+
+						// Determine column type and selecting sorter
+						sorter = getSorterForData(columnData);
+					}
+
+					if (data.options.debug) {
+						console.log("Column " + i + " using sorter: " + sorter);
+					}
 
 					// Save header
 					data.headerCache[i] = {
@@ -299,7 +359,8 @@
 					y = 0;
 
 				// Save all data in a 2D array
-				for (var i = 0; i < body.length; i++) {
+				var i;
+				for (i = 0; i < body.length; i++) {
 					var elementTd = body[i];
 
 					// Calculate Y and X in table
@@ -309,7 +370,7 @@
 					// If first element on row, create new array and save the row
 					if (x === 0) {
 						data.dataCache[y] = [];
-						data.dataCache[y]['rowElement'] = $(elementTd).parent();
+						data.dataCache[y].rowElement = $(elementTd).parent();
 					}
 
 					data.dataCache[y][x] = $(elementTd).text();
@@ -330,7 +391,8 @@
 				var headerCache = data.headerCache;
 				var sorterName = headerCache[sortingSettings.column].sorter;
 				var sorter;
-				for (var i = 0; i < sorters.length; i++) {
+				var i;
+				for (i = 0; i < sorters.length; i++) {
 					sorter = sorters[i];
 					if (sorter.name === sorterName) {
 						break;
@@ -340,7 +402,6 @@
 				data.dataCache.sort(customSorter(sortingSettings.column, sortingSettings.order, sorter.sorter));
 				$(this).data(dataName, data);
 
-				var data = $(this).data(dataName);
 				rewriteTable($(this), data.dataCache);
 				if (afterSort) {
 					afterSort($(this));

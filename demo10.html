@@ -7,7 +7,14 @@
 		<script src="js/jquery.kTablesorter.js"></script>
   		<script>
   			$(document).ready(function () {
-				$('table').kTablesorter({});
+				$('table').kTablesorter({
+					sorters: {
+						0: 'int',
+						1: 'text',
+						2: '',
+						4: 'date'
+					}
+				});
 			});
   		</script>
 	</head>
@@ -19,72 +26,7 @@
 					<th>Id</th>
 					<th>Nickname</th>
 					<th>Datestamp</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>1</td>
-					<td>Kronis</td>
-					<td>2011-02-01</td>
-				</tr>
-				<tr>
-					<td>2</td>
-					<td>John</td>
-					<td>2011-02-12</td>
-				</tr>
-				<tr>
-					<td>3</td>
-					<td>Adam</td>
-					<td>2012-02-27</td>
-				</tr>
-				<tr>
-					<td>4</td>
-					<td>Boo</td>
-					<td>2001-02-12</td>
-				</tr>
-				<tr>
-					<td>5</td>
-					<td>J05h</td>
-					<td>2002-02-12</td>
-				</tr>
-				<tr>
-					<td>6</td>
-					<td>B00by</td>
-					<td>1999-12-12</td>
-				</tr>
-				<tr>
-					<td>7</td>
-					<td>Rick</td>
-					<td>1998-12-11</td>
-				</tr>
-				<tr>
-					<td>8</td>
-					<td>Rick43</td>
-					<td>2011-06-12</td>
-				</tr>
-				<tr>
-					<td>9</td>
-					<td></td>
-					<td>2011-02-12</td>
-				</tr>
-				<tr>
-					<td>10</td>
-					<td>Jess</td>
-					<td>2011-05-12</td>
-				</tr>
-				<tr>
-					<td>11</td>
-					<td>adam</td>
-					<td>2011-02-12</td>
-				</tr>
-			</tbody>
-		</table>
-		<h4>Other table</h4>
-		<table>
-			<thead>
-				<tr>
-					<th>Id</th>
-					<th>Nickname</th>
+					<th>Datestamp</th>
 					<th>Datestamp</th>
 				</tr>
 			</thead>
@@ -93,55 +35,77 @@
 					<td>1</td>
 					<td>Kronis</td>
 					<td>2011-02-01</td>
+					<td>2011-02-01</td>
+					<td>2011-02-01</td>
 				</tr>
 				<tr>
 					<td>2</td>
 					<td>John</td>
+					<td>2011-02-12</td>
+					<td>2011-02-12</td>
 					<td>2011-02-12</td>
 				</tr>
 				<tr>
 					<td>3</td>
 					<td>Adam</td>
 					<td>2012-02-27</td>
+					<td>2012-02-27</td>
+					<td>2012-02-27</td>
 				</tr>
 				<tr>
 					<td>4</td>
 					<td>Boo</td>
+					<td>2001-02-12</td>
+					<td>2001-02-12</td>
 					<td>2001-02-12</td>
 				</tr>
 				<tr>
 					<td>5</td>
 					<td>J05h</td>
 					<td>2002-02-12</td>
+					<td>2002-02-12</td>
+					<td>2002-02-12</td>
 				</tr>
 				<tr>
 					<td>6</td>
 					<td>B00by</td>
+					<td>1999-12-12</td>
+					<td>1999-12-12</td>
 					<td>1999-12-12</td>
 				</tr>
 				<tr>
 					<td>7</td>
 					<td>Rick</td>
 					<td>1998-12-11</td>
+					<td>1998-12-11</td>
+					<td>1998-12-11</td>
 				</tr>
 				<tr>
 					<td>8</td>
 					<td>Rick43</td>
+					<td>2011-06-12</td>
+					<td>2011-06-12</td>
 					<td>2011-06-12</td>
 				</tr>
 				<tr>
 					<td>9</td>
 					<td></td>
 					<td>2011-02-12</td>
+					<td>2011-02-12</td>
+					<td>2011-02-12</td>
 				</tr>
 				<tr>
 					<td>10</td>
 					<td>Jess</td>
 					<td>2011-05-12</td>
+					<td>2011-05-12</td>
+					<td>2011-05-12</td>
 				</tr>
 				<tr>
 					<td>11</td>
 					<td>adam</td>
+					<td>2011-02-12</td>
+					<td>2011-02-12</td>
 					<td>2011-02-12</td>
 				</tr>
 			</tbody>

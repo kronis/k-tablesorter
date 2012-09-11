@@ -15,7 +15,7 @@
 		<a href="demo1.html">Demo 1</a>
 
 		<h3>Multiple basic tables demo</h3>
-		<a href="demo2.html">Demo 2</a> TODO
+		<a href="demo2.html">Demo 2</a>
 
 		<h3>Sorting and filter table demo</h3>
 		<a href="demo3.html">Demo 3</a>
@@ -24,7 +24,7 @@
 		<a href="demo4.html">Demo 4</a>	
 
 		<h3>Demo of 'beforeSort' and 'afterSort' callbacks</h3>
-		<a href="demo5.html">Demo 5</a> TODO
+		<a href="demo5.html">Demo 5</a>
 
 		<h3>Demo of disabling sort on columns</h3>
 		<a href="demo6.html">Demo 6</a>
@@ -36,7 +36,13 @@
 		<a href="demo8.html">Demo 8</a> TODO
 
 		<h3>Large table with many rows</h3>
-		<a href="demo9.php?rows=1000">Demo 9</a> TODO
+		<a href="demo9.php?rows=1000">Demo 9</a>
+
+		<h3>Specify sorter for columns</h3>
+		<a href="demo10.html">Demo 10</a>
+
+		<h3>Sorting on multiple columns</h3>
+		<a href="demo11.html">Demo 11</a> TODO
 
 		<h2>Options</h2>
 		<table>
@@ -91,6 +97,13 @@
 					<td>true</td>
 					<td>boolean</td>
 					<td>If table sould be sorted on initilize</td>
+				</tr>
+				<tr>
+					<td>sorters</td>
+					<td>column indexes, 0 is first</td>
+					<td>undefined</td>
+					<td>array</td>
+					<td>If you want to select sorter manually</td>
 				</tr>
 			</tbody>
 		</table>
@@ -194,6 +207,29 @@
 				</ul>
 			</ul>
 		</ul>
+
+		<h2>Standard sorters</h2>
+		<table>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Description</th>
+					<th>Regexp</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>text</td>
+					<td>standard, evrything that don't matches anything else.</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>int</td>
+					<td>matches integers</td>
+					<td>^\d*$</td>
+				</tr>
+			</tbody>
+		</table>
 
 		<h2>Downloads</h2>
 		Coming...
